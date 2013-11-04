@@ -66,9 +66,9 @@ if (!function_exists('str_getcsv')) {
     } 
 } 
 
-$conn = mysql_connect("localhost", "root", "") or die ("Error on connection");
-mysql_select_db("connect2give");
-$res = mysql_query("SELECT id FROM vtiger_crmentity_seq");
+$conn = mysql_connect("localhost", "root", "") or die ("Error on connection"); //conexiune
+mysql_select_db("connect2give"); //baza de date
+$res = mysql_query("SELECT id FROM vtiger_crmentity_seq"); //id-ul maxim
 if ($row = mysql_fetch_array($res)) $commentId = $row["id"];
 
 echo "<pre>";
@@ -76,11 +76,11 @@ $csvrows = str_getcsv(file_get_contents("comments_sfh.csv"), "\n");
 foreach ($csvrows as $index => $entry) {
 	if ($index == 0) continue;
 	$columns = str_getcsv($entry[0], ",");
-	$columns = $columns[0];
-	$companyName = mysql_real_escape_string($columns[3], $conn);
+	$columns = $columns[0]; //cum e in CSV 
+	$companyName = mysql_real_escape_string($columns[3], $conn); //in CSV coloana 4 e company
 	$comment = mysql_real_escape_string($columns[4] . ' - ' . $columns[5], $conn);
-	$date = explode('/',$columns[0]);
-	$time = explode(':',$columns[1]);
+	$date = explode('/',$columns[0]); //coloana 0 este data
+	$time = explode(':',$columns[1]); //coloana 1 este ora
 	$commentDate = $date[2] . '-' . (($date[0]<10?'0':'').($date[0]*1)) . '-' . (($date[1]<10?'0':'').($date[1]*1)) . ' ' . (($time[0]<10?'0':'').($time[0]*1)) . ':' . (($time[0]<10?'0':'').($time[1]*1)) . ':00';
 	
 	if (trim($companyName) == '') continue; //empty company
